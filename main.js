@@ -1,14 +1,50 @@
 import { YYReact, Component } from "./YYReact";
 
-class MyComponet extends Component {
+class Square extends Component {
+  constructor(props) {
+    super(props)
+    this.state ={
+      value:null
+    }
+  }
   render() {
-    return <div>Hello Word !
-      <p>true</p>
-      <p>12312</p>
-    </div>;
+    return (
+      <button onClick={() => {
+        this.setState({
+          value:'X'
+        })
+      }} className="square">
+        {this.state.value ? this.state.value:''}
+      </button>
+    );
   }
 }
 
-let a = <MyComponet name="abc"> </MyComponet>;
+class Board extends Component {
+  renderSquare(i) {
+    return <Square value={i} />;
+  }
+  render() {
+    return ( <div>
+      <div className="board-row">
+        {this.renderSquare(0)}
+        {this.renderSquare(1)}
+        {this.renderSquare(2)}
+      </div>
+      <div className="board-row">
+        {this.renderSquare(3)}
+        {this.renderSquare(4)}
+        {this.renderSquare(5)}
+      </div>
+      <div className="board-row">
+        {this.renderSquare(6)}
+        {this.renderSquare(7)}
+        {this.renderSquare(8)}
+      </div>
+    </div>);
+  }
+}
+
+let a = <Board name="abc"> </Board>;
 
 YYReact.render(a, document.body);

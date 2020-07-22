@@ -7,12 +7,31 @@ class Square extends Component {
       value:null
     }
   }
+  componentWillMount() {
+    console.log('willMount');
+  }
+  componentDidMount() {
+    console.log('didMount')
+  }
+  componentWillUpdate() {
+    console.log('willUpdate')
+  }
+  componentDidUpdate() {
+    console.log('didUpdate')
+  }
   render() {
     return (
       <button onClick={() => {
-        this.setState({
-          value:'X'
-        })
+        if (this.state.value === 'X') {
+          this.setState({
+            value:'O'
+          })
+        } else {
+          this.setState({
+            value:'X'
+          })
+        }
+       
       }} className="square">
         {this.state.value ? this.state.value:''}
       </button>
@@ -21,6 +40,7 @@ class Square extends Component {
 }
 
 class Board extends Component {
+  
   renderSquare(i) {
     return <Square value={i} />;
   }

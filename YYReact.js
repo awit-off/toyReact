@@ -5,7 +5,6 @@ class ElementWarpper {
   setAttribute(name, value) {
     if (name.match(/^on([\s\S]+)$/)) {
       let eventName = RegExp.$1.replace(/^[\s\S]/, (s) => s.toLowerCase());
-      console.log(eventName)
       this.root.addEventListener(eventName, value);
     }
     if (name === 'className') {
@@ -44,26 +43,38 @@ export class Component {
   constructor() {
     this.children = [];
     this.props = Object.create(null)
+    this.eventObj = {
+      componentWillUpdate:null,
+      componentDidUpdate:this.componentDidUpdate
+    }
+    if (this.componentWillUpdate) {
+      this.eventObj.componentWillUpdate = this.componentWillUpdate;
+    } 
+    if (this.componentDidUpdate) {
+      this.eventObj.componentDidUpdate = this.componentDidUpdate
+    }
   }
   setAttribute(name, value) {
-    
     this.props[name] = value;
     this[name] = value;
   }
   mountTo(range) {
+    this.componentWillMount && this.componentWillMount();
     this.range = range;
-    this.update();    
+    this.update(); 
+    this.componentDidMount && this.componentDidMount();   
   }
   update() {
+    this.eventObj.componentWillUpdate&&this.eventObj.componentWillUpdate()
     let range = document.createRange();
     let placeholder = document.createComment('placeholder')
     range.setStart(this.range.endContainer,this.range.endOffset)
     range.setEnd(this.range.endContainer,this.range.endOffset)
     range.insertNode(placeholder)
-    console.log(this.range)
     this.range.deleteContents()
     let vdom = this.render();
     vdom.mountTo(this.range);
+    this.eventObj.componentDidUpdate&&this.eventObj.componentDidUpdate()
   }
   appendChild(vchild) {
     this.children.push(vchild);
